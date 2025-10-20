@@ -127,12 +127,12 @@ def arg_parser():
   parser.add_argument('--alpha_1', type=float, default=1e-2)
   parser.add_argument('--alpha_2', type=float, default=1e-2)
   parser.add_argument('--alpha_3', type=float, default=1e-2)
-  parser.add_argument('--decode', action='store_true')
   parser.add_argument('--alpha_4', type=float, default=1e-0)
   parser.add_argument('--alpha_5', type=float, default=1e-0)
   parser.add_argument('--alpha_6', type=float, default=1e-0)
   parser.add_argument('--alpha_7', type=float, default=1e-0)
   parser.add_argument('--alpha_8', type=float, default=0)
+  parser.add_argument('--decode', action='store_true')
 
   parser.add_argument('--gene_shuff_train', action='store_true')
   parser.add_argument('--gene_shuff_val', action='store_true')
