@@ -6,26 +6,26 @@ DiSCO: DiSCO: Deconvoluting Spatial Transcriptomics via Combinatorial Optimizati
 
 Jing Liu, Yahao Wu, Limin Li
 
-<img src="figs/framework_ViewFormer.jpg">
+<img src="fig/overview of DiSCO.pdf">
 
 
 ## `Requirements`
 
     
-pytorch-lightning==1.7.7
-scikit-learn==1.0.2
-scipy==1.7.3
-six==1.16.0
-torch-cluster==1.6.0+pt112cu116
-torch-geometric==2.2.0
-torch-scatter==2.1.0+pt112cu116
-torch-sparse==0.6.16+pt112cu116
-torch-spline-conv==1.2.1+pt112cu116
-torch==1.12.0+cu116
-torchaudio==0.12.0+cu116
-torchmetrics==0.11.4
-torchvision==0.13.0+cu116
-wandb==0.13.9
+    pytorch-lightning==1.7.7
+    scikit-learn==1.0.2
+    scipy==1.7.3
+    six==1.16.0
+    torch-cluster==1.6.0+pt112cu116
+    torch-geometric==2.2.0
+    torch-scatter==2.1.0+pt112cu116
+    torch-sparse==0.6.16+pt112cu116
+    torch-spline-conv==1.2.1+pt112cu116
+    torch==1.12.0+cu116
+    torchaudio==0.12.0+cu116
+    torchmetrics==0.11.4
+    torchvision==0.13.0+cu116
+    wandb==0.13.9
 
 
 To train the model, you can simply run
