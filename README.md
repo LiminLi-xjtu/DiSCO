@@ -2,11 +2,11 @@
 
 This is the PyTorch Implementation for our paper:
 
-DiSCO: DiSCO: Deconvoluting Spatial Transcriptomics via Combinatorial Optimization with a Foundational Diffusion Model
+DiSCO: Deconvoluting Spatial Transcriptomics via Combinatorial Optimization with a Foundational Diffusion Model
 
 Jing Liu, Yahao Wu, Limin Li
 
-<img src="fig/overview of DiSCO.pdf">
+<embed src="fig/overview of DiSCO.pdf">
 
 
 ## `Requirements`
@@ -34,5 +34,5 @@ python main.py --storage_path ./models --task de_conv --hidden_dim 128 --n_layer
 ```
 For testing, 
 ```angular2html
-python train.py --data_path ... --storage_path ... --ckpt_path./models/.../checkpoints/epoch=115-step=261000.ckpt --task de_conv --hidden_dim 128 --n_layers 6 --parallel_sampling 128 --project_name de_conv --resume_id 2 --wandb_logger_name 2 --do_test --test_data seqfish+ --inference_diffusion_steps 800 --aggregation sum --num_workers 128 --diffusion_schedule cosine --save_A0_only 
+python main.py --data_path ... --storage_path ... --ckpt_path./models/.../checkpoints/epoch=115-step=261000.ckpt --task de_conv --hidden_dim 128 --n_layers 6 --parallel_sampling 128 --project_name de_conv --resume_id 2 --wandb_logger_name 2 --do_test --test_data seqfish+ --inference_diffusion_steps 800 --aggregation sum --num_workers 128 --diffusion_schedule cosine --save_A0_only 
 ```
