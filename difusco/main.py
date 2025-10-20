@@ -25,7 +25,9 @@ import time
 def arg_parser():
   parser = ArgumentParser(description='Train a Pytorch-Lightning diffusion model on a TSP dataset.')
   parser.add_argument('--task', type=str, required=True, default='tsp')
-  parser.add_argument('--data_path', type=str, required=True)
+  parser.add_argument('--data_path_train', type=str, required=True)
+  parser.add_argument('--data_path_val', type=str, required=True)
+  parser.add_argument('--data_path_test', type=str, required=True)
   parser.add_argument('--storage_path', type=str, required=True)
   parser.add_argument('--training_split', type=str, default='train.pt')
   parser.add_argument('--training_split_label_dir', type=str, default=None,
@@ -64,7 +66,7 @@ def arg_parser():
   parser.add_argument('--save_plt_loss', action='store_true')
   
 
-  parser.add_argument('--project_name', type=str, default='tsp_diffusion')
+  parser.add_argument('--project_name', type=str, default='CO')
   parser.add_argument('--wandb_entity', type=str, default=None)
   parser.add_argument('--wandb_logger_name', type=str, default='new')
   parser.add_argument("--resume_id", type=str, default=None, help="Resume training on wandb.")
@@ -130,6 +132,7 @@ def arg_parser():
   parser.add_argument('--alpha_5', type=float, default=1e-0)
   parser.add_argument('--alpha_6', type=float, default=1e-0)
   parser.add_argument('--alpha_7', type=float, default=1e-0)
+  parser.add_argument('--alpha_8', type=float, default=0)
 
   parser.add_argument('--gene_shuff_train', action='store_true')
   parser.add_argument('--gene_shuff_val', action='store_true')
@@ -139,8 +142,8 @@ def arg_parser():
   return args
 
 # wandb.init(settings=wandb.Settings(init_timeout=120))
-# os.environ["WANDB_API_KEY"] = 'b6f60853ff5d79ca4b91c14f0a8ed73abbe41000'
-# os.environ["WANDB_MODE"] = "offline"
+os.environ["WANDB_API_KEY"] = 'b6f60853ff5d79ca4b91c14f0a8ed73abbe41000'
+os.environ["WANDB_MODE"] = "offline"
 
 def main(args):
   pp.pprint(vars(args))
@@ -167,9 +170,6 @@ def main(args):
   if args.task == 'de_conv':
     model_class = SC2STModel_light
     saving_mode = 'min'
-  elif args.task == 'mis':
-    model_class = MISModel
-    saving_mode = 'max'
   else:
     raise NotImplementedError
 
@@ -184,7 +184,7 @@ def main(args):
       save_dir=os.path.join(args.storage_path, f'models'),
       id=args.resume_id or wandb_id,
   )
-  rank_zero_info(f"Logging to {wandb_logger.save_dir}/6{wandb_logger.name}/{wandb_logger.version}")
+  rank_zero_info(f"Logging to {wandb_logger.save_dir}/{wandb_logger.name}/{wandb_logger.version}")
 
   checkpoint_callback = ModelCheckpoint(
       monitor='val/solved_cost', mode=saving_mode,
@@ -196,18 +196,10 @@ def main(args):
   )
   lr_callback = LearningRateMonitor(logging_interval='step')
 
-  # strategy = FSDPStrategy(
-  #   # Default: The CPU will schedule the transfer of weights between GPUs
-  #   # at will, sometimes too aggressively
-  #   # limit_all_gathers=False,
-  #   # Enable this if you are close to the max. GPU memory usage
-  #   limit_all_gathers=True,)
-
 
   trainer = Trainer(
       accelerator="auto",
       devices=torch.cuda.device_count() if torch.cuda.is_available() else None,
-      # devices=None,
       max_epochs=epochs,
       callbacks=[TQDMProgressBar(refresh_rate=20), checkpoint_callback, lr_callback],
       logger=wandb_logger,
@@ -219,12 +211,6 @@ def main(args):
       # strategy="dp",
       precision=16 if args.fp16 else 32,
   )
-
-  # rank_zero_info(
-  #     f"{'-' * 100}\n"
-  #     f"{str(model.model)}\n"
-  #     f"{'-' * 100}\n"
-  # )
 
   ckpt_path = args.ckpt_path
 
@@ -250,7 +236,8 @@ def main(args):
   elif args.do_test:
     print('test on:', ckpt_path)
     start_time = time.time()
-    trainer.test(model, ckpt_path=ckpt_path)
+    model = model_class.load_from_checkpoint(ckpt_path, param_args=args, strict=False)
+    trainer.test(model)
     print(time.time()-start_time)
       
   trainer.logger.finalize("success")
