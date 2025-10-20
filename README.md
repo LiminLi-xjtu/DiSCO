@@ -7,6 +7,7 @@ DiSCO: Deconvoluting Spatial Transcriptomics via Combinatorial Optimization with
 Jing Liu, Yahao Wu, Limin Li
 
 <iframe src="fig/overview.pdf&embedded=true">
+<embed src="fig/overview.pdf" type="application/pdf" width="100%" height="600">
 
 
 ## `Requirements`
